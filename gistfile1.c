@@ -4,6 +4,10 @@
 # it. Nate Murray
 # Settings:
 #       /SET growl_on_regex [regex]
+#
+# http://gist.github.com/6206
+# or 
+# git clone git://gist.github.com/6206.git gist-6206
 
 use strict;
 use Irssi;
