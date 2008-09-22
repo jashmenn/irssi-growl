@@ -4,6 +4,7 @@
 # it. Nate Murray
 # Settings:
 #       /SET growl_on_regex [regex]
+#       /SET growl_channel_regex [regex]
 #
 # http://gist.github.com/6206
 # or 
@@ -22,7 +23,7 @@ $VERSION = "0.0";
 	description => "Simple script that will growlnotify the messages",
 	license     => "GPL",
 	url         => "http://www.xcombinator.com",
-	changed     => "Tue Jun 17 08:55:13 PDT 2008"
+	changed     => "Mon Sep 22 11:55:07 PDT 2008"
 );
 
 # All the works
@@ -35,8 +36,18 @@ sub growl_it {
 # All the works
 sub growl_message {
 	my ($server, $data, $nick, $mask, $target) = @_;
-    # Irssi::settings_get_bool('growl_on_my_nick_only');
+    my ($goal, $text) = split(/ :/, $data, 2);
+
     my $filter = Irssi::settings_get_str('growl_on_regex');
+    my $channel_filter = Irssi::settings_get_str('growl_channel_regex');
+
+    if($channel_filter) {
+      # skip everything else if this channel doesnt match the filter
+      if($target !~ /$channel_filter/) {
+        Irssi::signal_continue($server, $data, $nick, $mask, $target);
+        return;
+      }
+    }
 
     if($filter) {
       growl_it($nick, $data) if $data =~ /$filter/;
@@ -77,9 +88,8 @@ sub growl_topic {
 }
 
 # Hook me up
-#Irssi::settings_add_bool('misc', 'growl_on_my_nick_only', 0); # false
-Irssi::settings_add_str('misc', 'growl_on_regex', 0); # false
-
+Irssi::settings_add_str('misc', 'growl_on_regex', 0);      # false
+Irssi::settings_add_str('misc', 'growl_channel_regex', 0); # false
 Irssi::signal_add('message public', 'growl_message');
 Irssi::signal_add('message private', 'growl_message');
 Irssi::signal_add('message join', 'growl_join');
