@@ -1,11 +1,20 @@
+# == WHAT
 # Simple script for growl notifications in irssi
 #
-# If anyone has a better suggestion to DRY up the signals I would appreciate
-# it. Nate Murray
-# Settings:
-#       /SET growl_on_regex [regex]
-#       /SET growl_channel_regex [regex]
+# == WHO
+# Nate Murray 2008
+# 
+# == CONFIG
+#   /SET growl_on_regex [regex]
+#   /SET growl_channel_regex [regex]
 #
+# == INSTALL
+# Place in ~/.irssi/scripts/
+# /script load growl.pl
+#
+# == CONTRIBUTE
+# If anyone has a better suggestion to DRY up the signals I would appreciate it. 
+# 
 # http://gist.github.com/6206
 # or 
 # git clone git://gist.github.com/6206.git gist-6206
@@ -27,10 +36,28 @@ $VERSION = "0.0";
 );
 
 # All the works
-sub growl_it {
+sub do_growl {
 	my ($title, $data) = @_;
     $data =~ s/["';]//g;
     system("growlnotify -H localhost -m '$data' -t '$title'");
+    return 1
+}
+
+sub growl_it {
+	my ($title, $data, $channel, $nick) = @_;
+
+    my $filter = Irssi::settings_get_str('growl_on_regex');
+    my $channel_filter = Irssi::settings_get_str('growl_channel_regex');
+
+    if($filter) {
+      return 0 if $data !~ /$filter/;
+    }
+
+    if($channel_filter) {
+      return 0 if $channel !~ /$channel_filter/;
+    }
+
+    do_growl($title, $data);
 }
 
 # All the works
@@ -38,52 +65,54 @@ sub growl_message {
 	my ($server, $data, $nick, $mask, $target) = @_;
     my ($goal, $text) = split(/ :/, $data, 2);
 
-    my $filter = Irssi::settings_get_str('growl_on_regex');
-    my $channel_filter = Irssi::settings_get_str('growl_channel_regex');
+    # my $filter = Irssi::settings_get_str('growl_on_regex');
+    # my $channel_filter = Irssi::settings_get_str('growl_channel_regex');
 
-    if($channel_filter) {
-      # skip everything else if this channel doesnt match the filter
-      if($target !~ /$channel_filter/) {
-        Irssi::signal_continue($server, $data, $nick, $mask, $target);
-        return;
-      }
-    }
+    # if($channel_filter) {
+    #   skip everything else if this channel doesnt match the filter
+    #   if($target !~ /$channel_filter/) {
+    #     Irssi::signal_continue($server, $data, $nick, $mask, $target);
+    #     return;
+    #   }
+    # }
 
-    if($filter) {
-      growl_it($nick, $data) if $data =~ /$filter/;
-    } else {
-      growl_it($nick, $data);
-    }
+    # if($filter) {
+    #   growl_it($nick, $data) if $data =~ /$filter/;
+    # } else {
+    #   growl_it($nick, $data);
+    # }
+
+    growl_it($nick, $data, $target, $nick);
 	Irssi::signal_continue($server, $data, $nick, $mask, $target);
 }
 
 sub growl_join {
 	my ($server, $channel, $nick, $address) = @_;
-    growl_it("Join", "$nick has joined");
+    growl_it("Join", "$nick has joined", $channel, $nick);
 	Irssi::signal_continue($server, $channel, $nick, $address);
 }
 
 sub growl_part {
 	my ($server, $channel, $nick, $address) = @_;
-    growl_it("Part", "$nick has parted");
+    growl_it("Part", "$nick has parted", $channel, $nick);
 	Irssi::signal_continue($server, $channel, $nick, $address);
 }
 
 sub growl_quit {
 	my ($server, $nick, $address, $reason) = @_;
-    growl_it("Quit", "$nick has quit: $reason");
+    growl_it("Quit", "$nick has quit: $reason", $server, $nick);
 	Irssi::signal_continue($server, $nick, $address, $reason);
 }
 
 sub growl_invite {
 	my ($server, $channel, $nick, $address) = @_;
-    growl_it("Invite", "$nick has invited you on $channel");
+    growl_it("Invite", "$nick has invited you on $channel", $channel, $nick);
 	Irssi::signal_continue($server, $channel, $address);
 }
 
 sub growl_topic {
 	my ($server, $channel, $topic, $nick, $address) = @_;
-    growl_it("Topic: $topic", "$nick has changed the topic to $topic on $channel");
+    growl_it("Topic: $topic", "$nick has changed the topic to $topic on $channel", $channel, $nick);
 	Irssi::signal_continue($server, $channel, $topic, $nick, $address);
 }
 
