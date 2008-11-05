@@ -64,24 +64,6 @@ sub growl_it {
 sub growl_message {
 	my ($server, $data, $nick, $mask, $target) = @_;
     my ($goal, $text) = split(/ :/, $data, 2);
-
-    # my $filter = Irssi::settings_get_str('growl_on_regex');
-    # my $channel_filter = Irssi::settings_get_str('growl_channel_regex');
-
-    # if($channel_filter) {
-    #   skip everything else if this channel doesnt match the filter
-    #   if($target !~ /$channel_filter/) {
-    #     Irssi::signal_continue($server, $data, $nick, $mask, $target);
-    #     return;
-    #   }
-    # }
-
-    # if($filter) {
-    #   growl_it($nick, $data) if $data =~ /$filter/;
-    # } else {
-    #   growl_it($nick, $data);
-    # }
-
     growl_it($nick, $data, $target, $nick);
 	Irssi::signal_continue($server, $data, $nick, $mask, $target);
 }
