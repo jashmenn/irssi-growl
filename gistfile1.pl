@@ -8,6 +8,14 @@
 #   /SET growl_on_regex [regex]
 #   /SET growl_channel_regex [regex]
 #
+# == EXAMPLES
+#
+#   growl everything:
+#   /SET growl_on_regex  .*
+#
+#   ignore jdewey
+#   /SET growl_on_regex  (?=^(?:(?!jdewey).)*$).*
+#
 # == INSTALL
 # Place in ~/.irssi/scripts/
 # /script load growl.pl
