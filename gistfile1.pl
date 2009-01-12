@@ -52,7 +52,7 @@ sub do_growl {
 }
 
 sub growl_it {
-	my ($title, $data, $channel, $nick) = @_;
+	my ($server, $title, $data, $channel, $nick) = @_;
 
     my $filter = Irssi::settings_get_str('growl_on_regex');
     my $channel_filter = Irssi::settings_get_str('growl_channel_regex');
@@ -61,9 +61,10 @@ sub growl_it {
       return 0 if $data !~ /$filter/;
     }
 
-    if($channel_filter) {
+    if($channel_filter && $server->ischannel($channel)) {
       return 0 if $channel !~ /$channel_filter/;
     }
+
 
     do_growl($title, $data);
 }
@@ -72,37 +73,37 @@ sub growl_it {
 sub growl_message {
 	my ($server, $data, $nick, $mask, $target) = @_;
     my ($goal, $text) = split(/ :/, $data, 2);
-    growl_it($nick, $data, $target, $nick);
+    growl_it($server, $nick, $data, $target, $nick);
 	Irssi::signal_continue($server, $data, $nick, $mask, $target);
 }
 
 sub growl_join {
 	my ($server, $channel, $nick, $address) = @_;
-    growl_it("Join", "$nick has joined", $channel, $nick);
+    growl_it($server, "Join", "$nick has joined", $channel, $nick);
 	Irssi::signal_continue($server, $channel, $nick, $address);
 }
 
 sub growl_part {
 	my ($server, $channel, $nick, $address) = @_;
-    growl_it("Part", "$nick has parted", $channel, $nick);
+    growl_it($server, "Part", "$nick has parted", $channel, $nick);
 	Irssi::signal_continue($server, $channel, $nick, $address);
 }
 
 sub growl_quit {
 	my ($server, $nick, $address, $reason) = @_;
-    growl_it("Quit", "$nick has quit: $reason", $server, $nick);
+    growl_it($server, "Quit", "$nick has quit: $reason", $server, $nick);
 	Irssi::signal_continue($server, $nick, $address, $reason);
 }
 
 sub growl_invite {
 	my ($server, $channel, $nick, $address) = @_;
-    growl_it("Invite", "$nick has invited you on $channel", $channel, $nick);
+    growl_it($server, "Invite", "$nick has invited you on $channel", $channel, $nick);
 	Irssi::signal_continue($server, $channel, $address);
 }
 
 sub growl_topic {
 	my ($server, $channel, $topic, $nick, $address) = @_;
-    growl_it("Topic: $topic", "$nick has changed the topic to $topic on $channel", $channel, $nick);
+    growl_it($server, "Topic: $topic", "$nick has changed the topic to $topic on $channel", $channel, $nick);
 	Irssi::signal_continue($server, $channel, $topic, $nick, $address);
 }
 
@@ -113,9 +114,8 @@ sub growl_privmsg {
 	# $nick = the nick who sent the message
 	# $host = host of the nick who sent the message
 	my ($server, $data, $nick, $host) = @_;
-    my ($goal, $text) = split(/ :/, $data, 2);
-    my $target = $nick;
-    growl_it($nick, $data, $target, $nick);
+    my ($target, $text) = split(/ :/, $data, 2);
+    growl_it($server, $nick, $data, $target, $nick);
 	Irssi::signal_continue($server, $data, $nick, $host);
 }
 
