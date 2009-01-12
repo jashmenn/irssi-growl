@@ -106,6 +106,20 @@ sub growl_topic {
 	Irssi::signal_continue($server, $channel, $topic, $nick, $address);
 }
 
+sub growl_privmsg {
+	# $server = server record where the message came
+	# $data = the raw data received from server, with PRIVMSGs it is:
+	#         "target :text" where target is either your nick or #channel
+	# $nick = the nick who sent the message
+	# $host = host of the nick who sent the message
+	my ($server, $data, $nick, $host) = @_;
+    my ($goal, $text) = split(/ :/, $data, 2);
+    my $target = $nick;
+    growl_it($nick, $data, $target, $nick);
+	Irssi::signal_continue($server, $data, $nick, $host);
+}
+
+
 # Hook me up
 Irssi::settings_add_str('misc', 'growl_on_regex', 0);      # false
 Irssi::settings_add_str('misc', 'growl_channel_regex', 0); # false
@@ -116,3 +130,4 @@ Irssi::signal_add('message part', 'growl_part');
 Irssi::signal_add('message quit', 'growl_quit');
 Irssi::signal_add('message invite', 'growl_invite');
 Irssi::signal_add('message topic', 'growl_topic');
+Irssi::signal_add('event privmsg', 'growl_privmsg');
