@@ -65,6 +65,7 @@ sub growl_it {
       return 0 if $channel !~ /$channel_filter/;
     }
 
+    $title = $title . " " . $channel;
 
     do_growl($title, $data);
 }
