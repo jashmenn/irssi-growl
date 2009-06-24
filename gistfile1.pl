@@ -30,6 +30,7 @@
 use strict;
 use Irssi;
 use vars qw($VERSION %IRSSI);
+# use Config;
 
 # Dev. info ^_^
 $VERSION = "0.0";
@@ -47,7 +48,14 @@ $VERSION = "0.0";
 sub do_growl {
 	my ($title, $data) = @_;
     $data =~ s/["';]//g;
-    system("growlnotify -H localhost -m '$data' -t '$title'");
+    # if ($Config{useithreads}) {
+    #   use threads;
+    #   threads->new( sub {
+    #   system("growlnotify -H localhost -m '$data' -t '$title'");
+    #   }) # ->join ?
+    # } else {
+      system("growlnotify -m '$data' -t '$title' >> /dev/null 2>&1");
+    # }
     return 1
 }
 
@@ -56,14 +64,19 @@ sub growl_it {
 
     my $filter = Irssi::settings_get_str('growl_on_regex');
     my $channel_filter = Irssi::settings_get_str('growl_channel_regex');
+    my $growl_on_nick = Irssi::settings_get_str('growl_on_nick');
 
-    if($filter) {
-      return 0 if $data !~ /$filter/;
-    }
-
-    if($channel_filter && $server->ischannel($channel)) {
-      return 0 if $channel !~ /$channel_filter/;
-    }
+    my $current_nick = $server->{nick};
+    if($growl_on_nick =~ /true/i && $data =~ /$current_nick/) {
+      # growl, dont check anything else
+    } else {
+        if($filter) {
+          return 0 if $data !~ /$filter/;
+        }
+        if($channel_filter && $server->ischannel($channel)) {
+          return 0 if $channel !~ /$channel_filter/;
+        }
+   }
 
     $title = $title . " " . $channel;
 
@@ -124,6 +137,7 @@ sub growl_privmsg {
 # Hook me up
 Irssi::settings_add_str('misc', 'growl_on_regex', 0);      # false
 Irssi::settings_add_str('misc', 'growl_channel_regex', 0); # false
+Irssi::settings_add_str('misc', 'growl_on_nick', 1);       # true
 Irssi::signal_add('message public', 'growl_message');
 Irssi::signal_add('message private', 'growl_message');
 Irssi::signal_add('message join', 'growl_join');
