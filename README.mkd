@@ -34,8 +34,10 @@ CONTRIBUTE
 
 If anyone has a better suggestion to DRY up the signals I would appreciate it. 
 
-http://gist.github.com/6206
-or 
-git clone git://gist.github.com/6206.git gist-6206
+http://github.com/jashmenn/irssi-growl
+
+OR
+
+git clone git://github.com/jashmenn/irssi-growl.git
 
 
