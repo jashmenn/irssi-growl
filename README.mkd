@@ -1,0 +1,41 @@
+WHAT
+====
+
+Simple script for growl notifications in irssi
+
+WHO
+===
+
+Nate Murray `<nate@natemurray.com>` 2008-2010
+
+INSTALL
+=======
+
+Place in ~/.irssi/scripts/
+/script load growl.pl
+
+CONFIG
+======
+
+ /SET growl_on_regex [regex]
+ /SET growl_channel_regex [regex]
+
+EXAMPLES
+========
+
+ growl everything:
+ /SET growl_on_regex  .*
+
+ ignore jdewey
+ /SET growl_on_regex  (?=^(?:(?!jdewey).)*$).*
+
+CONTRIBUTE
+==========
+
+If anyone has a better suggestion to DRY up the signals I would appreciate it. 
+
+http://gist.github.com/6206
+or 
+git clone git://gist.github.com/6206.git gist-6206
+
+
