@@ -11,23 +11,26 @@ Nate Murray `<nate@natemurray.com>` 2008-2010
 INSTALL
 =======
 
-Place in ~/.irssi/scripts/
-/script load growl.pl
+Place in `~/.irssi/scripts/`
+
+    /script load growl.pl
 
 CONFIG
 ======
 
- /SET growl_on_regex [regex]
- /SET growl_channel_regex [regex]
+    /SET growl_on_regex [regex]
+    /SET growl_channel_regex [regex]
 
 EXAMPLES
 ========
 
  growl everything:
- /SET growl_on_regex  .*
+
+     /SET growl_on_regex  .*
 
  ignore jdewey
- /SET growl_on_regex  (?=^(?:(?!jdewey).)*$).*
+
+     /SET growl_on_regex  (?=^(?:(?!jdewey).)*$).*
 
 CONTRIBUTE
 ==========
@@ -38,6 +41,6 @@ http://github.com/jashmenn/irssi-growl
 
 OR
 
-git clone git://github.com/jashmenn/irssi-growl.git
+     git clone git://github.com/jashmenn/irssi-growl.git
 
 
