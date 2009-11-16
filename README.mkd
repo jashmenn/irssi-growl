@@ -37,10 +37,10 @@ CONTRIBUTE
 
 If anyone has a better suggestion to DRY up the signals I would appreciate it. 
 
-http://github.com/jashmenn/irssi-growl
+[http://github.com/jashmenn/irssi-growl](http://github.com/jashmenn/irssi-growl)
 
 OR
 
-     git clone git://github.com/jashmenn/irssi-growl.git
+    git clone git://github.com/jashmenn/irssi-growl.git
 
 
