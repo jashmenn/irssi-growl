@@ -11,14 +11,15 @@ Nate Murray `<nate@natemurray.com>` 2008-2010
 INSTALL
 =======
 
-Place in `~/.irssi/scripts/`
+Place these files in `~/.irssi/scripts/`. Put your growl icon in there too.
 
     /script load growl.pl
 
 CONFIG
 ======
 
-    /SET growl_on_regex [regex]
+	/SET growl_icon [filename]
+	/SET growl_on_regex [regex]
     /SET growl_channel_regex [regex]
 
 EXAMPLES
