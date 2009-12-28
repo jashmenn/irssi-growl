@@ -5,6 +5,7 @@
 # Nate Murray 2008
 # 
 # == CONFIG
+#   /SET growl_icon [filename]
 #   /SET growl_on_regex [regex]
 #   /SET growl_channel_regex [regex]
 #
@@ -17,7 +18,7 @@
 #   /SET growl_on_regex  (?=^(?:(?!jdewey).)*$).*
 #
 # == INSTALL
-# Place in ~/.irssi/scripts/
+# Place these files in `~/.irssi/scripts/`. Put your growl icon in there too.
 # /script load growl.pl
 #
 # == CONTRIBUTE
@@ -47,6 +48,7 @@ $VERSION = "0.0";
 # All the works
 sub do_growl {
 	my ($title, $data) = @_;
+	my $icon = growl_locate_icon(Irssi::settings_get_str('growl_icon'));
     $data =~ s/["';]//g;
     # if ($Config{useithreads}) {
     #   use threads;
@@ -54,7 +56,7 @@ sub do_growl {
     #   system("growlnotify -H localhost -m '$data' -t '$title'");
     #   }) # ->join ?
     # } else {
-      system("growlnotify -m '$data' -t '$title' >> /dev/null 2>&1");
+      system("growlnotify --image '$icon' -m '$data' -t '$title' >> /dev/null 2>&1");
     # }
     return 1
 }
@@ -133,8 +135,21 @@ sub growl_privmsg {
 	Irssi::signal_continue($server, $data, $nick, $host);
 }
 
+sub growl_locate_icon {
+	# $file = the name of the icon file to look for
+	my ($file) = @_;
+	if (-e "$file") {
+		return "$file";
+	}
+	foreach (@INC) {
+		if (-e "$_/$file") {
+			return "$_/$file";
+		}
+	}
+}
 
 # Hook me up
+Irssi::settings_add_str('misc', 'growl_icon', 'irssi-flame.png');
 Irssi::settings_add_str('misc', 'growl_on_regex', 0);      # false
 Irssi::settings_add_str('misc', 'growl_channel_regex', 0); # false
 Irssi::settings_add_str('misc', 'growl_on_nick', 1);       # true
