@@ -47,17 +47,14 @@ $VERSION = "0.0";
 
 # All the works
 sub do_growl {
-	my ($title, $data) = @_;
+	my ($server, $title, $data) = @_;
 	my $icon = growl_locate_icon(Irssi::settings_get_str('growl_icon'));
     $data =~ s/["';]//g;
-    # if ($Config{useithreads}) {
-    #   use threads;
-    #   threads->new( sub {
-    #   system("growlnotify -H localhost -m '$data' -t '$title'");
-    #   }) # ->join ?
-    # } else {
+    if ($server->{usermode_away}) {
+      system("growlnotify --sticky --image '$icon' -m '$data' -t '$title' >> /dev/null 2>&1");
+    } else {
       system("growlnotify --image '$icon' -m '$data' -t '$title' >> /dev/null 2>&1");
-    # }
+    }
     return 1
 }
 
@@ -81,8 +78,7 @@ sub growl_it {
    # }
 
     $title = $title . " " . $channel;
-
-    do_growl($title, $data);
+    do_growl($server, $title, $data);
 }
 
 # All the works
