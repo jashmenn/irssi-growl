@@ -18,20 +18,32 @@ Place these files in `~/.irssi/scripts/`. Put your growl icon in there too.
 CONFIG
 ======
 
-	/SET growl_icon [filename]
-	/SET growl_on_regex [regex]
+    /SET growl_icon [filename]
+    /SET growl_on_regex [regex]
     /SET growl_channel_regex [regex]
 
 EXAMPLES
 ========
 
- growl everything:
+ growl on mynickname
 
-     /SET growl_on_regex  .*
+    /SET growl_on_regex mynickname
 
- ignore jdewey
+ growl on everything
 
-     /SET growl_on_regex  (?=^(?:(?!jdewey).)*$).*
+    /SET growl_on_regex .*
+
+ everything but jdewey
+
+    /SET growl_on_regex (?=^(?:(?!jdewey).)*$).*
+
+ only growl things for mychannel1 and mychannel2
+
+    /SET growl_channel_regex (mychannel1|mychannel2)
+
+ enable the icon
+
+    /SET growl_icon irssi-flame.png
 
 CONTRIBUTE
 ==========

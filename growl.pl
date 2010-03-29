@@ -11,12 +11,21 @@
 #
 # == EXAMPLES
 #
-#   growl everything:
-#   /SET growl_on_regex  .*
+#   growl on mynickname
+#   /SET growl_on_regex mynickname
 #
-#   ignore jdewey
-#   /SET growl_on_regex  (?=^(?:(?!jdewey).)*$).*
+#   growl on everything:
+#   /SET growl_on_regex .*
 #
+#   everything but jdewey
+#   /SET growl_on_regex (?=^(?:(?!jdewey).)*$).*
+#
+#   only growl things for mychannel1 and mychannel2
+#   /SET growl_channel_regex (mychannel1|mychannel2)
+# 
+#   enable the icon
+#   /SET growl_icon irssi-flame.png
+# 
 # == INSTALL
 # Place these files in `~/.irssi/scripts/`. Put your growl icon in there too.
 # /script load growl.pl
@@ -66,16 +75,12 @@ sub growl_it {
     my $growl_on_nick = Irssi::settings_get_str('growl_on_nick');
 
     my $current_nick = $server->{nick};
-    # if($growl_on_nick =~ /true/i && $data =~ /$current_nick/) {
-      # growl, dont check anything else
-    # } else {
-        if($filter) {
-          return 0 if $data !~ /$filter/;
-        }
-        if($channel_filter && $server->ischannel($channel)) {
-          return 0 if $channel !~ /$channel_filter/;
-        }
-   # }
+		if($filter) {
+			return 0 if $data !~ /$filter/;
+		}
+		if($channel_filter && $server->ischannel($channel)) {
+			return 0 if $channel !~ /$channel_filter/;
+		}
 
     $title = $title . " " . $channel;
     do_growl($server, $title, $data);
@@ -84,7 +89,6 @@ sub growl_it {
 # All the works
 sub growl_message {
 	my ($server, $data, $nick, $mask, $target) = @_;
-    my ($goal, $text) = split(/ :/, $data, 2);
     growl_it($server, $nick, $data, $target, $nick);
 	Irssi::signal_continue($server, $data, $nick, $mask, $target);
 }
