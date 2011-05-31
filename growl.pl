@@ -63,7 +63,7 @@ sub do_growl {
   if ($server->{usermode_away}) {
     $options .= " --sticky"
   }
-  open(GROWL, "| growlnotify ".$options) || die "can't open pipe to growlnotify, do you have it installed?";
+  open(GROWL, "| growlnotify $options") || die "can't open pipe to growlnotify, do you have it installed?";
   print GROWL $data;
   close(GROWL);
 
