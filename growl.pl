@@ -61,7 +61,7 @@ sub do_growl {
 
   my $options = "--image '$icon' -t '$title'";
   if ($server->{usermode_away}) {
-    $options = $options." --sticky"
+    $options .= " --sticky"
   }
   open(GROWL, "| growlnotify ".$options) || die "can't open pipe to growlnotify, do you have it installed?";
   print GROWL $data;
