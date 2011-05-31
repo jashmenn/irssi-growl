@@ -158,8 +158,8 @@ Irssi::settings_add_str('misc', 'growl_channel_regex', 0); # false
 Irssi::settings_add_str('misc', 'growl_on_nick', 1);       # true
 Irssi::signal_add('message public', 'growl_message');
 Irssi::signal_add('message private', 'growl_message');
-Irssi::signal_add('message own_public', 'growl_message');
-Irssi::signal_add('message own_private', 'growl_message');
+#Irssi::signal_add('message own_public', 'growl_message');
+#Irssi::signal_add('message own_private', 'growl_message');
 Irssi::signal_add('message join', 'growl_join');
 Irssi::signal_add('message part', 'growl_part');
 Irssi::signal_add('message quit', 'growl_quit');
