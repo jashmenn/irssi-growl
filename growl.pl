@@ -58,13 +58,16 @@ $VERSION = "0.0";
 sub do_growl {
 	my ($server, $title, $data) = @_;
 	my $icon = growl_locate_icon(Irssi::settings_get_str('growl_icon'));
-    $data =~ s/["';]//g;
-    if ($server->{usermode_away}) {
-      system("growlnotify --sticky --image '$icon' -m '$data' -t '$title' >> /dev/null 2>&1");
-    } else {
-      system("growlnotify --image '$icon' -m '$data' -t '$title' >> /dev/null 2>&1");
-    }
-    return 1
+
+  my $options = "--image '$icon' -t '$title'";
+  if ($server->{usermode_away}) {
+    $options = $options." --sticky"
+  }
+  open(GROWL, "| growlnotify ".$options) || die "can't open pipe to growlnotify, do you have it installed?";
+  print GROWL $data;
+  close(GROWL);
+
+  return 1
 }
 
 sub growl_it {
