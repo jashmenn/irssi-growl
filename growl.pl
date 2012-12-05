@@ -130,7 +130,11 @@ sub growl_privmsg {
 	# $nick = the nick who sent the message
 	# $host = host of the nick who sent the message
 	my ($server, $data, $nick, $host) = @_;
-    my ($target, $text) = split(/ :/, $data, 2);
+        my ($target, $text) = split(/ :/, $data, 2);
+        my $cur_nick = $server->{nick};
+        if($target =~ $cur_nick) {
+          do_notifier($server, $nick, $text);
+        }
     # growl_it($server, $nick, $data, $target, $nick); # actually, don't do this.
 	Irssi::signal_continue($server, $data, $nick, $host);
 }
