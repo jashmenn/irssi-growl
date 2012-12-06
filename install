@@ -1,0 +1,38 @@
+#!/bin/sh
+
+echo "Setting up directories:"
+
+if [ ! -d ~/.irssi/ ]; then
+  echo "    mkdir ~/.irssi"
+  mkdir ~/.irssi
+else
+  echo "    You already have ~/.irssi"
+fi
+
+if [ ! -d ~/.irssi/scripts ]; then
+  echo "    mkdir ~/.irssi/scripts"
+  mkdir ~/.irssi/scripts
+else
+  echo "    You already have ~/.irssi/scripts"
+fi
+
+if [ ! -d ~/.irssi/scripts/autorun ]; then
+  echo "    mkdir ~/.irssi/scripts/autorun"
+  mkdir ~/.irssi/scripts/autorun
+else
+  echo "    You already have ~/.irssi/scripts/autorun"
+fi
+
+echo "Copying over script and icons:"
+
+echo "    cp growl.pl ~/.irssi/scripts"
+cp growl.pl ~/.irssi/scripts
+
+echo "    cp growl.pl ~/.irssi/scripts/autorun"
+cp growl.pl ~/.irssi/scripts/autorun
+
+echo "    copy icons to  ~/.irssi/scripts"
+cp irssi-white.png ~/.irssi/scripts
+cp irssi-black.png ~/.irssi/scripts
+cp irssi-flame.png ~/.irssi/scripts
+
